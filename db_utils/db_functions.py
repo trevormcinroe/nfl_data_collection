@@ -104,7 +104,7 @@ class DataManager:
 
         col = db[collection]
 
-        col.insert_one(data)
+        col.insert_many(data)
 
     def _player_bio(self, player_list):
         """
@@ -115,6 +115,8 @@ class DataManager:
         Returns:
 
         """
+
+        data_container = []
 
         for player in player_list:
             # The first thing we need to do is open the file..
@@ -149,9 +151,14 @@ class DataManager:
             # we should be able to query these player stats by team
             new_data = dict()
             new_data[str(data['current_team'])] = data
+            data_container.append(new_data)
+
+        self._write_to_db(collection=self.bio_collection, data=data_container)
 
     def _player_stats(self, player_list):
         """"""
+
+        data_container = []
 
         for player in player_list:
             file = os.path.join(self.top_dir,
@@ -167,8 +174,11 @@ class DataManager:
             try:
                 new_data = dict()
                 new_data[str(data[0]['player_id'])] = data
+                data_container.append(new_data)
             except:
                 continue
+
+        self._write_to_db(collection=self.stats_collection, data=data_container)
 
 
 
