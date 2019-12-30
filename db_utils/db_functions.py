@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 import pymongo
 from pymongo import MongoClient
-
+import configparser
 
 top_dir = r'C:\Users\trevor_mcinroe\nfl'
 bio_folder = 'profile_data'
@@ -45,14 +45,66 @@ def data_move():
 
 class DataManager:
 
-    def __init__(self, top_dir, bio_dir, stats_dir):
+    def __init__(self, top_dir,
+                 bio_dir,
+                 stats_dir,
+                 db,
+                 bio_collection,
+                 stats_collection):
+
         self.top_dir = top_dir
         self.bio_dir = bio_dir
         self.stats_dir = stats_dir
+        self.db = db
+        self.bio_collection = bio_collection
+        self.stats_collection = stats_collection
+        self.creds = self._register()
+        self.mongo_connection  = self._make_connection()
 
-    def _write_to_db(self):
+    def _register(self):
         """"""
-        pass
+
+        parser = configparser.ConfigParser()
+
+        parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 'creds.ini'))
+
+        return {
+            'server_ip': parser['SERVER']['server_ip'],
+            'server_port': parser['SERVER']['server_port'],
+            'usr': parser['LOGIN']['usr'],
+            'pwd': parser['LOGIN']['pwd']
+        }
+
+    def _make_connection(self):
+        """
+        This method creates connection to the MongoDB Server during the initalization of the class
+        """
+
+        client = pymongo.MongoClient(self.creds['server_ip'],
+                                     int(self.creds['server_port']))
+
+        return client
+
+    def _write_to_db(self, collection, data):
+        """
+
+        Args:
+            collection:
+            data:
+
+        Returns:
+
+        """
+
+        db = self.mongo_connection[self.db]
+
+        db.authenticate(name=self.creds['usr'],
+                        password=self.creds['pwd'])
+
+        col = db[collection]
+
+        col.insert_one(data)
 
     def _player_bio(self, player_list):
         """
