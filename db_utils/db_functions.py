@@ -48,18 +48,18 @@ class DataManager:
     def __init__(self, top_dir,
                  bio_dir,
                  stats_dir,
-                 db,
-                 bio_collection,
-                 stats_collection):
+                 db=None,
+                 bio_collection=None,
+                 stats_collection=None):
 
         self.top_dir = top_dir
         self.bio_dir = bio_dir
         self.stats_dir = stats_dir
-        self.db = db
-        self.bio_collection = bio_collection
-        self.stats_collection = stats_collection
-        self.creds = self._register()
-        self.mongo_connection  = self._make_connection()
+        # self.db = db
+        # self.bio_collection = bio_collection
+        # self.stats_collection = stats_collection
+        # self.creds = self._register()
+        # self.mongo_connection  = self._make_connection()
 
     def _register(self):
         """"""

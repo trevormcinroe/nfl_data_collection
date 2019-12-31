@@ -87,7 +87,7 @@ class Scraper():
                 self.save_player_profile(player.profile)
                 self.save_player_game_stats(player.game_stats, player.player_id, player.profile['name'])
                 player_id += 1
-        self.condense_data()
+        # self.condense_data()
 
     def condense_data(self):
         """Condense data into two files, a profile file and a stats file"""
